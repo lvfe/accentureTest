@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import * as courseActions from '../../actions/courseActions';
 
 import RangeChart from '../charts/RangeChartPage';
-import Range from '../charts/RangePage';
+import RangeRow from '../charts/RangePage';
 import LegendChart from '../charts/LegendPage';
 
 class CoursesPage extends React.Component {
@@ -39,7 +39,7 @@ class CoursesPage extends React.Component {
           onChange={this.onTitleChange}
           value={this.props.courses.title}
         />
-        <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title}/>
         <h2>Add Course</h2>
         <input
           type="text"
@@ -50,7 +50,7 @@ class CoursesPage extends React.Component {
           type="submit"
           value="Save"
           onClick={this.onClickSave}/>
-        <Range onChange={this.onTitleChange} data={this.props.courses.title} />
+        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title}/>
       </div>
     );
   }
