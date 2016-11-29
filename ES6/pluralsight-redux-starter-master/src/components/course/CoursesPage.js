@@ -39,7 +39,8 @@ class CoursesPage extends React.Component {
           onChange={this.onTitleChange}
           value={this.props.courses.title}
         />
-      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title}/>
+
+        <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} />
         <h2>Add Course</h2>
         <input
           type="text"
@@ -50,7 +51,7 @@ class CoursesPage extends React.Component {
           type="submit"
           value="Save"
           onClick={this.onClickSave}/>
-        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title}/>
+        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title} />
       </div>
     );
   }

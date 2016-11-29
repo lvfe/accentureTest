@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 /*
-* has multiple color
+* has multiple
 */
 const RangeChart = (props) => {
+
       (function(){
         let dataset = [{"x":20, "color":"red"},{"x":40, "color":"grey"},{"x":80,"color":"blue"}];
         let margin ={"left":10, "top":10};
@@ -67,11 +68,15 @@ const RangeChart = (props) => {
             }
           });
       })(window.d3);
-
+    const callChart =() => {
+      console.log("hello");
+      return "hello";
+    }
     return (
       <div>
           <h1>Range chart Page</h1>
           <p>{props.data}</p>
+          <p onLoad={callChart}>HI</p>
           <button onClick={props.onTitleChange}>range page</button>
       </div>
     );
