@@ -76,7 +76,6 @@ const RangeChart = (props) => {
       <div>
           <h1>Range chart Page</h1>
           <p>{props.data}</p>
-          <p onLoad={callChart}>HI</p>
           <button onClick={props.onTitleChange}>range page</button>
       </div>
     );
