@@ -13,7 +13,7 @@ const LegendChart = (props) => {
       {
         field: 'Medicare',
         name: 'Medicare',
-        color: '#2ca02c'
+        color: '#1ABC9C'
       },
       {
         field: 'Commercial',

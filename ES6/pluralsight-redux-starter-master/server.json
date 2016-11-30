@@ -1,0 +1,13 @@
+{
+    "ranges": [
+      {"Medicare":40, "A14BackOffice":60},
+      {"Medicare":20, "A14BackOffice":60},
+      {"Medicare":40, "A14BackOffice":60},
+      {"Commercial":20, "A14BackOffice":60},
+      {"Commercial":40, "A14BackOffice":70},
+      {"Commercial":20, "A14BackOffice":55}],
+    "other":{
+      "incremental":0,
+      "capture":0
+    }
+}

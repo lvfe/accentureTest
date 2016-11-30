@@ -9,7 +9,7 @@ class RangeRow extends React.Component {
         super(props, context);
 
         this.state = {
-          course: {title:""}
+          course: {incremental:"",capture:""}
         };
 
         this.drawGreyRange = this.drawGreyRange.bind(this);
@@ -30,12 +30,13 @@ class RangeRow extends React.Component {
               <h1 className="rangetitle">{this.props.title}</h1>
               <span id={this.props.id}></span>
               <span>{this.props.data}</span>
-              <span>{this.props.subtitle}</span>
+              <span className="noticeText">{this.props.subtitle}</span>
           </div>
         );
     }
 
     drawGreyRange(id, item){
+
       let _self = this;
       let d_node = document.getElementById(id);
       while(d_node.hasChildNodes()){
@@ -50,15 +51,15 @@ class RangeRow extends React.Component {
       let lastMoveX=0, lastMoveY=0;
 
       let circleData = [
-        { "cx": 20, "cy": 30, "radius": 20, "color" : "red" }];
+        { "cx": 20, "cy": 30, "radius": 20, "color" : "#fff" }];
 
       let rectangleData = [
-        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" }];
+        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "#B2BABB" }];
 
       let svgContainer = d3.select("#"+id)
           .append("svg")
-          .attr("width", 200)
-          .attr("height", 200);
+          .attr("width", width-500)
+          .attr("height", 50);
 
       let rectangles = svgContainer.selectAll("rect")
         .data(rectangleData)
@@ -81,6 +82,7 @@ class RangeRow extends React.Component {
           .attr("cy", function(d){ return d.cy; })
           .attr("r", function(d){ return d.radius; })
           .style("fill", function(d){ return d.color; })
+          .style("stroke", "#B2BABB")
           .on("mousedown", function(){
               let evt = d3.event;
               evt.preventDefault(); // Needed for Firefox to allow dragging correctly
@@ -95,6 +97,13 @@ class RangeRow extends React.Component {
               lastMoveX = moveX;
               lastMoveY = moveY;
               evt.target.setAttribute("fill","gray");
+              let newState = {};
+              if(_self.props.id=="range1"){
+                newState.incremental=evt.clientX;
+              }else{
+                if(_self.props.id=="range2") newState.capture=evt.clientX;
+              }
+              _self.props.dispatch(courseActions.updateCourse(newState));
           })
           .on("mouseout", function(){
               let evt = d3.event;
@@ -105,15 +114,12 @@ class RangeRow extends React.Component {
           })
           .on("mousemove", function(){
             let evt = d3.event;
-            let newState = {};
             evt.preventDefault();
             if(click){
                 moveX = lastMoveX + ( evt.clientX - clickX );
                 moveY = lastMoveY;
                 evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
 
-                newState.title=evt.clientX;
-                _self.props.dispatch(courseActions.updateCourse(newState));
             }
           });
 
@@ -142,12 +148,12 @@ class RangeRow extends React.Component {
         { "cx": item, "cy": 30, "radius": 20, "color" : "red" }];
 
       let rectangleData = [
-        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" }];
+        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "#B2BABB" }];
 
       let svgContainer = d3.select("#"+id)
           .append("svg")
-          .attr("width", 200)
-          .attr("height", 200);
+          .attr("width", width-500)
+          .attr("height", 50);
 
       let rectangles = svgContainer.selectAll("rect")
         .data(rectangleData)
@@ -169,41 +175,43 @@ class RangeRow extends React.Component {
       let circleAttributes = circles.attr("cx", function(d){ return d.cx; })
           .attr("cy", function(d){ return d.cy; })
           .attr("r", function(d){ return d.radius; })
-          .style("fill", function(d){ return d.color; })
+          .style("fill", "white")
+          .style("stroke", "#B2BABB")
           .on("mousedown", function(){
               let evt = d3.event;
               evt.preventDefault(); // Needed for Firefox to allow dragging correctly
               click=true;
               clickX = evt.clientX;
               clickY = evt.clientY;
-              evt.target.setAttribute("fill","green");
           })
           .on("mouseup", function(){
               let evt = d3.event;
               click=false;
               lastMoveX = moveX;
               lastMoveY = moveY;
-              evt.target.setAttribute("fill","gray");
+
+              let newState = {};
+              if(_self.props.id=="range1"){
+                newState.incremental=evt.clientX;
+              }else{
+                if(_self.props.id=="range2") newState.capture=evt.clientX;
+              }
+              _self.props.dispatch(courseActions.updateCourse(newState));
           })
           .on("mouseout", function(){
               let evt = d3.event;
               click=false;
               lastMoveX = moveX;
               lastMoveY = moveY;
-              evt.target.setAttribute("fill","gray");
           })
           .on("mousemove", function(){
               let evt = d3.event;
               evt.preventDefault();
-              let newState = {};
-
+              //note: moving state cannot set store state
               if(click){
                   moveX = lastMoveX + ( evt.clientX - clickX );
                   moveY = lastMoveY;
                   evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
-
-                  newState.title=evt.clientX;
-                  _self.props.dispatch(courseActions.updateCourse(newState));
               }
 
           });
