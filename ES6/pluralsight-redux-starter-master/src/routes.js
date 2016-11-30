@@ -8,9 +8,9 @@ import DashPage from './components/course/DashPage';
 
 export default(
   <Route path="/" component={App}>
-    <IndexRoute component={HomePage} />
+    <IndexRoute component={DashPage} />
     <Route path="courses" component={CoursesPage} />
-    <Route path="dash" component={DashPage} />
+    <Route path="home" component={HomePage} />
     <Route path="about" component={AboutPage} />
   </Route>
 );
