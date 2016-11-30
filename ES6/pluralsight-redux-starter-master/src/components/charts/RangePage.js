@@ -4,36 +4,40 @@ import * as courseActions from '../../actions/courseActions';
 /*
 * has grey color
 */
-
-
-
 class RangeRow extends React.Component {
     constructor(props, context){
         super(props, context);
+
+        this.state = {
+          course: {title:""}
+        };
+
+        this.drawGreyRange = this.drawGreyRange.bind(this);
+        this.updateGreyRange = this.updateGreyRange.bind(this);
     }
 
     componentDidMount() {
-      console.log(this.props.data);
-        this.drawGreyRange(this.props.data);
+        this.drawGreyRange(this.props.id, this.props.data);
     }
-    componentDidUpdate() {
 
-      console.log("update"+this.props.data);
-        this.updateGreyRange(this.props.data);
+    componentDidUpdate() {
+        this.updateGreyRange(this.props.id, this.props.data);
     }
 
     render(){
         return (
           <div>
-              <h1>Range Page</h1>
-              <p id="hdi"></p>
-              <p>{this.props.data}</p>
-              <button onClick={this.props.onTitleChange}>range row page</button>
+              <h1 className="rangetitle">{this.props.title}</h1>
+              <span id={this.props.id}></span>
+              <span>{this.props.data}</span>
+              <span>{this.props.subtitle}</span>
           </div>
         );
     }
-    drawGreyRange(item){
-      let d_node = document.getElementById("hdi");
+
+    drawGreyRange(id, item){
+      let _self = this;
+      let d_node = document.getElementById(id);
       while(d_node.hasChildNodes()){
           d_node.removeChild(d_node.lastChild);
       }
@@ -46,19 +50,27 @@ class RangeRow extends React.Component {
       let lastMoveX=0, lastMoveY=0;
 
       let circleData = [
-        { "cx": 20, "cy": 30, "radius": 20, "color" : "red" },
-        { "cx": 20, "cy": 80, "radius": 20, "color" : "red" }];
-
+        { "cx": 20, "cy": 30, "radius": 20, "color" : "red" }];
 
       let rectangleData = [
-        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" },
-        { "rx": 10, "ry": 70, "height": 20, "width": width-100, "color" : "grey" }];
+        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" }];
 
-
-      let svgContainer = d3.select("#hdi")
+      let svgContainer = d3.select("#"+id)
           .append("svg")
           .attr("width", 200)
           .attr("height", 200);
+
+      let rectangles = svgContainer.selectAll("rect")
+        .data(rectangleData)
+        .enter()
+        .append("rect");
+
+      let rectangleAttributes = rectangles
+        .attr("x", function(d){ return d.rx; })
+        .attr("y", function(d){ return d.ry; })
+        .attr("height", function(d){ return d.height; })
+        .attr("width", function(d){ return d.width; })
+        .style("fill", function(d){ return d.color; });
 
       let circles = svgContainer.selectAll("circle")
           .data(circleData)
@@ -93,35 +105,27 @@ class RangeRow extends React.Component {
           })
           .on("mousemove", function(){
             let evt = d3.event;
+            let newState = {};
             evt.preventDefault();
             if(click){
                 moveX = lastMoveX + ( evt.clientX - clickX );
                 moveY = lastMoveY;
                 evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
+
+                newState.title=evt.clientX;
+                _self.props.dispatch(courseActions.updateCourse(newState));
             }
-            let newState = evt.clientX;
-            console.log(newState);
           });
 
-      let rectangles = svgContainer.selectAll("rect")
-        .data(rectangleData)
-        .enter()
-        .append("rect");
-
-      let rectangleAttributes = rectangles
-        .attr("x", function(d){ return d.rx; })
-        .attr("y", function(d){ return d.ry; })
-        .attr("height", function(d){ return d.height; })
-        .attr("width", function(d){ return d.width; })
-        .style("fill", function(d){ return d.color; });
     }
 
-    updateGreyRange(item){
+    updateGreyRange(id, item){
+      let _self = this;
       if(typeof item === undefined){
         item = 20;
       }
       //redraw the chart
-      let d_node = document.getElementById("hdi");
+      let d_node = document.getElementById(id);
       while(d_node.hasChildNodes()){
           d_node.removeChild(d_node.lastChild);
       }
@@ -135,19 +139,27 @@ class RangeRow extends React.Component {
       let lastMoveX=0, lastMoveY=0;
 
       let circleData = [
-        { "cx": item, "cy": 30, "radius": 20, "color" : "red" },
-        { "cx": item, "cy": 80, "radius": 20, "color" : "red" }];
-
+        { "cx": item, "cy": 30, "radius": 20, "color" : "red" }];
 
       let rectangleData = [
-        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" },
-        { "rx": 10, "ry": 70, "height": 20, "width": width-100, "color" : "grey" }];
+        { "rx": 10, "ry": 20, "height": 20, "width": width-100, "color" : "grey" }];
 
-
-      let svgContainer = d3.select("#hdi")
+      let svgContainer = d3.select("#"+id)
           .append("svg")
           .attr("width", 200)
           .attr("height", 200);
+
+      let rectangles = svgContainer.selectAll("rect")
+        .data(rectangleData)
+        .enter()
+        .append("rect");
+
+      let rectangleAttributes = rectangles
+        .attr("x", function(d){ return d.rx; })
+        .attr("y", function(d){ return d.ry; })
+        .attr("height", function(d){ return d.height; })
+        .attr("width", function(d){ return d.width; })
+        .style("fill", function(d){ return d.color; });
 
       let circles = svgContainer.selectAll("circle")
           .data(circleData)
@@ -167,7 +179,6 @@ class RangeRow extends React.Component {
               evt.target.setAttribute("fill","green");
           })
           .on("mouseup", function(){
-            debugger;
               let evt = d3.event;
               click=false;
               lastMoveX = moveX;
@@ -182,30 +193,24 @@ class RangeRow extends React.Component {
               evt.target.setAttribute("fill","gray");
           })
           .on("mousemove", function(){
-            let evt = d3.event;
-            evt.preventDefault();
-            if(click){
-                moveX = lastMoveX + ( evt.clientX - clickX );
-                moveY = lastMoveY;
-                evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
-            }
-            let newState = evt.clientX;
-            console.log(newState);
+              let evt = d3.event;
+              evt.preventDefault();
+              let newState = {};
+
+              if(click){
+                  moveX = lastMoveX + ( evt.clientX - clickX );
+                  moveY = lastMoveY;
+                  evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
+
+                  newState.title=evt.clientX;
+                  _self.props.dispatch(courseActions.updateCourse(newState));
+              }
+
           });
-
-      let rectangles = svgContainer.selectAll("rect")
-        .data(rectangleData)
-        .enter()
-        .append("rect");
-
-      let rectangleAttributes = rectangles
-        .attr("x", function(d){ return d.rx; })
-        .attr("y", function(d){ return d.ry; })
-        .attr("height", function(d){ return d.height; })
-        .attr("width", function(d){ return d.width; })
-        .style("fill", function(d){ return d.color; });
     }
+
 }
+
 function mapStateToProps(state, ownProps){
   return {
     courses:state.courses

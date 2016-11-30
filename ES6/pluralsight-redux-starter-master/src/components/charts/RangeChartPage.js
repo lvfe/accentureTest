@@ -11,25 +11,25 @@ class RangeChart extends React.Component {
     }
 
     componentDidMount() {
-        this.drawColorRange(this.props.data);
+        this.drawColorRange(this.props.id, this.props.data);
     }
     componentDidUpdate() {
-        this.updateColorRange(this.props.data);
+        this.updateColorRange(this.props.id, this.props.data);
     }
 
     render(){
         return (
           <div>
-              <h1>Range chart Page</h1>
-              <p id="rangechart"></p>
+              <h1 className="chartTitle">{this.props.title}</h1>
+              <div id={this.props.id}></div>
               <p>{this.props.data}</p>
-              <button onClick={this.props.onTitleChange}>range chart page</button>
+              <p className="chartSubtitle">{this.props.subtitle}</p>
           </div>
         );
     }
-    drawColorRange(item){
+    drawColorRange(id, item){
 
-      let dataset = [{"x":20, "color":"red"},{"x":40, "color":"grey"},{"x":80,"color":"blue"}];
+        let dataset = [{"x":20, "color":"red"},{"x":40, "color":"grey"},{"x":80,"color":"blue"}];
         let margin ={"left":10, "top":10};
 
         let click = false;
@@ -37,23 +37,23 @@ class RangeChart extends React.Component {
         let moveX=0, moveY=0;
         let lastMoveX=0, lastMoveY=0;
 
-        let svgContainer = d3.select("#rangechart")
+        let svgContainer = d3.select("#"+id)
             .append("svg")
             .attr("width", 200)
             .attr("height", 200);
 
         let g = svgContainer.append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         g.selectAll(".bar")
-          .data(dataset)
-          .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) { return d.x; })
-            .attr("y", function(d) { return 3; })
-            .attr("width", function(d){ return d.x })
-            .attr("height", function(d) { return 3; })
-            .attr("fill", function(d){ return d.color; });
+            .data(dataset)
+            .enter().append("rect")
+                .attr("class", "bar")
+                .attr("x", function(d) { return d.x; })
+                .attr("y", function(d) { return 3; })
+                .attr("width", function(d){ return d.x })
+                .attr("height", function(d) { return 3; })
+                .attr("fill", function(d){ return d.color; });
 
        let circle = svgContainer.append("circle")
           .attr("cx", 40)
@@ -61,12 +61,12 @@ class RangeChart extends React.Component {
           .attr("r", 5)
           .attr("fill", "red")
           .on("mousedown", function(){
-            let evt = d3.event;
-            evt.preventDefault(); // Needed for Firefox to allow dragging correctly
-          	click=true;
-          	clickX = evt.clientX;
-          	clickY = evt.clientY;
-          	evt.target.setAttribute("fill","green");
+              let evt = d3.event;
+              evt.preventDefault(); // Needed for Firefox to allow dragging correctly
+            	click=true;
+            	clickX = evt.clientX;
+            	clickY = evt.clientY;
+            	evt.target.setAttribute("fill","green");
           })
           .on("mouseup", function(){
             let evt = d3.event;
@@ -76,34 +76,34 @@ class RangeChart extends React.Component {
           	evt.target.setAttribute("fill","gray");
           })
           .on("mouseout", function(){
-            let evt = d3.event;
-            click=false;
-          	lastMoveX = moveX;
-          	lastMoveY = moveY;
-          	evt.target.setAttribute("fill","gray");
+              let evt = d3.event;
+              click=false;
+            	lastMoveX = moveX;
+            	lastMoveY = moveY;
+            	evt.target.setAttribute("fill","gray");
           })
           .on("mousemove", function(){
-            let evt = d3.event;
-            evt.preventDefault();
-          	if(click){
-          	    moveX = lastMoveX + ( evt.clientX - clickX );
-          	    moveY = lastMoveY;
-        	      evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
-            }
+              let evt = d3.event;
+              evt.preventDefault();
+            	if(click){
+            	    moveX = lastMoveX + ( evt.clientX - clickX );
+            	    moveY = lastMoveY;
+          	      evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
+              }
           });
     }
 
-    updateColorRange(item){
-      if(typeof item === undefined){
-        item = 20;
-      }
-      //redraw the chart
-      let d_node = document.getElementById("rangechart");
-      while(d_node.hasChildNodes()){
-          d_node.removeChild(d_node.lastChild);
-      }
+    updateColorRange(id, item){
+        if(typeof item === undefined){
+          item = 20;
+        }
+        //redraw the chart
+        let d_node = document.getElementById(id);
+        while(d_node.hasChildNodes()){
+            d_node.removeChild(d_node.lastChild);
+        }
 
-      let dataset = [{"x":20, "color":"red"},{"x":40, "color":"grey"},{"x":80,"color":"blue"}];
+        let dataset = [{"x":20, "color":"red"},{"x":40, "color":"grey"},{"x":80,"color":"blue"}];
         let margin ={"left":10, "top":10};
 
         let click = false;
@@ -111,23 +111,23 @@ class RangeChart extends React.Component {
         let moveX=0, moveY=0;
         let lastMoveX=0, lastMoveY=0;
 
-        let svgContainer = d3.select("body")
+        let svgContainer = d3.select('#'+id)
             .append("svg")
             .attr("width", 200)
             .attr("height", 200);
 
         let g = svgContainer.append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         g.selectAll(".bar")
-          .data(dataset)
-          .enter().append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) { return d.x; })
-            .attr("y", function(d) { return 3; })
-            .attr("width", function(d){ return d.x })
-            .attr("height", function(d) { return 3; })
-            .attr("fill", function(d){ return d.color; });
+            .data(dataset)
+            .enter().append("rect")
+              .attr("class", "bar")
+              .attr("x", function(d) { return d.x; })
+              .attr("y", function(d) { return 3; })
+              .attr("width", function(d){ return d.x })
+              .attr("height", function(d) { return 3; })
+              .attr("fill", function(d){ return d.color; });
 
        let circle = svgContainer.append("circle")
           .attr("cx", 40)
@@ -135,45 +135,41 @@ class RangeChart extends React.Component {
           .attr("r", 5)
           .attr("fill", "red")
           .on("mousedown", function(){
-            let evt = d3.event;
-            evt.preventDefault(); // Needed for Firefox to allow dragging correctly
-          	click=true;
-          	clickX = evt.clientX;
-          	clickY = evt.clientY;
-          	evt.target.setAttribute("fill","green");
+              let evt = d3.event;
+              evt.preventDefault(); // Needed for Firefox to allow dragging correctly
+            	click=true;
+            	clickX = evt.clientX;
+            	clickY = evt.clientY;
+            	evt.target.setAttribute("fill","green");
           })
           .on("mouseup", function(){
-            debugger;
-            let evt = d3.event;
-            click=false;
-          	lastMoveX = moveX;
-          	lastMoveY = moveY;
-          	evt.target.setAttribute("fill","gray");
+              let evt = d3.event;
+              click=false;
+            	lastMoveX = moveX;
+            	lastMoveY = moveY;
+            	evt.target.setAttribute("fill","gray");
           })
           .on("mouseout", function(){
-            debugger;
-            let evt = d3.event;
-            click=false;
-          	lastMoveX = moveX;
-          	lastMoveY = moveY;
-          	evt.target.setAttribute("fill","gray");
-
+              let evt = d3.event;
+              click=false;
+            	lastMoveX = moveX;
+            	lastMoveY = moveY;
+            	evt.target.setAttribute("fill","gray");
           })
           .on("mousemove", function(){
-            debugger;
-            let evt = d3.event;
-            evt.preventDefault();
-          	if(click){
-          	    moveX = lastMoveX + ( evt.clientX - clickX );
-          	    moveY = lastMoveY;
-        	      evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
-            }
+              let evt = d3.event;
+              evt.preventDefault();
+            	if(click){
+            	    moveX = lastMoveX + ( evt.clientX - clickX );
+            	    moveY = lastMoveY;
+          	      evt.target.setAttribute("transform", "translate(" + moveX + "," + moveY + ")");
+              }
           });
     }
 }
 function mapStateToProps(state, ownProps){
-  return {
-    courses:state.courses
-  };
+    return {
+        courses:state.courses
+    };
 }
 export default connect(mapStateToProps)(RangeChart);

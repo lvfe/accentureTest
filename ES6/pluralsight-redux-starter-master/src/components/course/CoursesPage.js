@@ -23,12 +23,15 @@ class CoursesPage extends React.Component {
       course.title = event.target.value;
       this.setState({course: course});
   }
+
   onClickSave() {
     this.props.dispatch(courseActions.createCourse(this.state.course));
   }
+
   courseRow(course, index) {
     return <div key={index}>{course.title}</div>;
   }
+
   render() {
     return (
       <div>
@@ -40,8 +43,14 @@ class CoursesPage extends React.Component {
           value={this.props.courses.title}
         />
 
-        <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} />
-        <h2>Add Course</h2>
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="# of codes found" id="rangechart1" subtitle="$20M" />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="cost/chart" id="rangechart2" subtitle="$10M" />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="processing time" id="rangechart3" subtitle="+2charts/h" />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="# of codes found" id="rangechart4" subtitle="$1M" />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="cost/chart" id="rangechart5" subtitle="$15M" />
+      <RangeChart onChange={this.onTitleChange} data={this.props.courses.title} title="processing time" id="rangechart6" subtitle="4charts/h"/>
+
+      <h2>Add Course</h2>
         <input
           type="text"
           onChange = {this.onTitleChange}
@@ -51,18 +60,22 @@ class CoursesPage extends React.Component {
           type="submit"
           value="Save"
           onClick={this.onClickSave}/>
-        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title} />
+        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title} title="INCREMETAL VALUE" id="range1" subtitle="$150M" />
+        <RangeRow onChange={this.onTitleChange} data={this.props.courses.title} title="%CAPTURE" id="range2" subtitle="39%" />
       </div>
     );
   }
 }
+
 CoursesPage.propType = {
   dispatch:PropTypes.func.isRequired,
   courses:PropTypes.array.isRequired
 }
+
 function mapStateToProps(state, ownProps){
   return {
     courses:state.courses
   };
 }
+
 export default connect(mapStateToProps)(CoursesPage);
